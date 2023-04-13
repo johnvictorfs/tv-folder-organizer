@@ -32,7 +32,6 @@ def setup_test_folder(tmp_path: pathlib.Path):
         (tmp_path / file).touch()
 
 
-# def test_organization(tmp_path: pathlib.Path):
 def test_organization(tmp_path: pathlib.Path):
     setup_test_folder(tmp_path)
 
