@@ -1,7 +1,7 @@
-name: Ruff
+name: Tests
 on: [ push, pull_request ]
 jobs:
-  ruff:
+  tests:
     runs-on: ubuntu-latest
     strategy:
         matrix:
@@ -39,3 +39,6 @@ jobs:
 
       - name: Type Check
         run: poetry run python -m mypy .
+
+      - name: Tests
+        run: poetry run python -m pytest
