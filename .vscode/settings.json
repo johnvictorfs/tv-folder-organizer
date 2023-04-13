@@ -1,7 +1,6 @@
 {
   "[python]": {
     "editor.formatOnSave": true,
-    "files.insertFinalNewline": true,
     "editor.codeActionsOnSave": {
       "source.fixAll": true,
       "source.organizeImports": true
@@ -14,4 +13,6 @@
     "editor.tabSize": 2,
     "files.insertFinalNewline": true
   },
+  // Ruff conflicts with ms-python linting
+  "python.linting.enabled": false,
 }
