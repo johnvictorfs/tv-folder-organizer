@@ -1,6 +1,7 @@
-def organize_folders():
-    print('Organized stuff')
+import pathlib
 
-if __name__ == '__main__':
-    organize_folders()
+from src.organizer import organize_folders
 
+if __name__ == "__main__":
+    # TODO CLI args
+    organize_folders(pathlib.Path("tmp"))
