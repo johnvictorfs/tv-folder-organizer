@@ -28,8 +28,8 @@ def setup_test_folder(tmp_path: pathlib.Path):
 
     tmp_path.mkdir(parents=True, exist_ok=True)
 
-    for file in disorganized_files:
-        (tmp_path / file).touch()
+    for fake_file in disorganized_files:
+        (tmp_path / fake_file).touch()
 
 
 def test_organization(tmp_path: pathlib.Path):
