@@ -1,8 +1,8 @@
 import type { RouterOutputs } from "@acme/api"
 import { Folder, FolderOpen } from "@mui/icons-material";
-import { SvgIcon, type SvgIconProps, styled } from "@mui/joy"
+import { SvgIcon, type SvgIconProps, styled, CircularProgress } from "@mui/joy"
 import { TreeItem, type TreeItemProps, TreeView, treeItemClasses, type TreeItemContentProps } from "@mui/lab"
-import { Collapse, Skeleton } from "@mui/material";
+import { Collapse } from "@mui/material";
 import { type TransitionProps } from "@mui/material/transitions";
 import { useSpring, animated } from '@react-spring/web';
 import { useState } from "react";
@@ -67,7 +67,7 @@ const FileTreeItem: React.FC<FileTreeItemProps> = ({
   includeHiddenDirectories,
   expanded
 }) => {
-  const { data: directoryTree, isFetched } = api.directory.getDirectoryStructure.useQuery(
+  const { data: directoryTree, isFetched, isInitialLoading } = api.directory.getDirectoryStructure.useQuery(
     {
       currentPath: directoryPath,
       includeHiddenDirectories,
@@ -98,6 +98,7 @@ const FileTreeItem: React.FC<FileTreeItemProps> = ({
       label={folderName}
       expandIcon={hasNoSubDirectories ? null : <Folder color="success" />}
       collapseIcon={hasNoSubDirectories ? null : <FolderOpen color="action" />}
+      icon={isInitialLoading ? <CircularProgress sx={{ "--CircularProgress-size": '20px' }} /> : null}
       ContentProps={contentProps}
     >
       {directoryTree?.subDirectories.map((directory) => (
@@ -110,7 +111,12 @@ const FileTreeItem: React.FC<FileTreeItemProps> = ({
       ))}
 
       {!isFetched && !directoryTree && (
-        <StyledTreeItem ContentProps={contentProps} nodeId={directoryPath + 'sub'} label={<Skeleton />} />
+        // Keep a invisible placeholder for the sub-tree since it's lazy-loaded, that way
+        // MUI doesn't think this node is not expandable, and it doesn't flicker when opened
+        <StyledTreeItem
+          sx={{ display: 'none' }}
+          nodeId={directoryPath + 'temp-sub-tree'}
+        />
       )}
     </StyledTreeItem>
   )
