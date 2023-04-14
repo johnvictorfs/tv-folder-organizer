@@ -6,6 +6,10 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/apps/nextjs/",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "serverReadyAction": {
         "pattern": "started server on .+, url: (https?://.+)",
         "uriFormat": "%s",
@@ -17,6 +21,10 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/apps/nextjs/",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "serverReadyAction": {
         "pattern": "started server on .+, url: (https?://.+)",
         "uriFormat": "%s",
