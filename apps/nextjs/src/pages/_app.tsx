@@ -1,14 +1,18 @@
-import "../styles/globals.css";
 import type { AppType } from "next/app";
+import '@fontsource/public-sans';
 
 import { api } from "~/utils/api";
+import { CssVarsProvider } from "@mui/joy";
+import { mergedTheme } from "~/theme/mui";
 
 const MyApp: AppType = ({
   Component,
   pageProps: pageProps,
 }) => {
   return (
-    <Component {...pageProps} />
+    <CssVarsProvider defaultMode="dark" theme={mergedTheme}>
+      <Component {...pageProps} />
+    </CssVarsProvider>
   );
 };
 
