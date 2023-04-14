@@ -8,23 +8,27 @@ import { readdir } from 'fs/promises'
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const directoryRouter = createTRPCRouter({
-  // Gets directory structure for User's home folder
   getDirectoryStructure: publicProcedure.input(
     z.object({
       currentPath: z.string().optional(),
       includeHiddenDirectories: z.boolean().optional().default(false),
     }).optional()
   ).query(async ({ input }) => {
-    const path = input?.currentPath || os.homedir();
+    // Consider '~' as home directory
+    const path = !input?.currentPath || input.currentPath === '~' ? os.homedir() : input.currentPath;
 
-    const subDirectories = (await readdir(path, { withFileTypes: true }))
+    let subDirectories = (await readdir(path, { withFileTypes: true }))
       .filter(dirent => dirent.isDirectory())
-      .filter(dirent => dirent.name.startsWith('.') ? input?.includeHiddenDirectories : true)
-      .map(dirent => dirent.name)
+
+    if (!input?.includeHiddenDirectories) {
+      subDirectories = subDirectories.filter(
+        dirent => !dirent.name.startsWith('.')
+      )
+    }
 
     return {
       currentLocation: path,
-      subDirectories
+      subDirectories: subDirectories.map(dirent => dirent.name),
     };
   }),
 });
