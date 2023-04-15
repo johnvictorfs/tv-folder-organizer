@@ -1,31 +1,54 @@
-import { useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 
 import {
   Add,
 } from '@mui/icons-material'
-import { api } from "~/utils/api"
-import { Button, Input, Modal, ModalDialog } from "@mui/joy"
 import { Skeleton } from '@mui/lab'
-import { FileTree } from "~/components/directory/FileTree"
-import { useDebounced } from "~/utils/input"
+import { Button, Input, Modal, ModalDialog, FormControl, FormHelperText } from "@mui/joy"
 import { toast } from "react-toastify"
+import { useForm } from 'react-hook-form'
+
+import { type RouterInputs, api } from "~/utils/api"
+import { FileTree } from "~/components/directory/FileTree"
+import { ErrorableFormControl } from "~/components/inputs/ErrorableFormControl"
+import { useDebounced } from "~/utils/input"
 
 export const NewDirectory: React.FC = () => {
+  const { register, unregister, handleSubmit, setValue, reset, clearErrors, formState: { errors } } = useForm<
+    RouterInputs['directory']['add']
+  >({
+    defaultValues: {
+      category: '',
+      location: '',
+      updateFrequencyInMinutes: 60
+    }
+  });
+
   const [modalOpen, setModalOpen] = useState(false)
   const [basePath, setBasePath] = useState('~')
-  const [category, setCategory] = useState('')
-  const [selectedPath, setSelectedPath] = useState('')
 
   const debouncedBasePath = useDebounced(basePath, 1200)
 
+  const closeModal = () => {
+    setModalOpen(false)
+    reset()
+  }
+
   const addDirectory = api.directory.add.useMutation({
     onSuccess() {
-      setCategory('')
-      setSelectedPath('')
-      setModalOpen(false)
-      toast.success("Directory added to be tracked successfully");
+      reset()
+      closeModal()
+      toast.success("Directory added successfully");
     }
   })
+
+  useEffect(() => {
+    register('location', { required: 'Select a directory' });
+
+    return () => {
+      unregister('location');
+    };
+  }, [register, unregister]);
 
   const { data: directoryTree } = api.directory.getDirectoryStructure.useQuery(
     {
@@ -37,18 +60,6 @@ export const NewDirectory: React.FC = () => {
     }
   );
 
-  const createButtonMessage = useMemo(() => {
-    if (!selectedPath) {
-      return 'Select a directory'
-    }
-
-    if (!category) {
-      return 'Enter a category'
-    }
-
-    return `Add '${selectedPath}' to be tracked as '${category}'`
-  }, [selectedPath, category])
-
   return (
     <>
       <Button onClick={() => setModalOpen(true)} endDecorator={<Add />}>
@@ -57,50 +68,62 @@ export const NewDirectory: React.FC = () => {
 
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        onClose={closeModal}
       >
         <ModalDialog size="lg" sx={{ p: 2, minHeight: 200, minWidth: 700 }}>
-          Adding new Directory to be tracked
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleSubmit(data => {
+                addDirectory.mutate(data)
+              })(event)
+            }}>
+            Adding new Directory to be tracked
 
-          <Input
-            sx={{ mt: 2 }}
-            placeholder="Category (Ex: Movies, TV Shows, etc)"
-            value={category}
-            onChange={({ target }) => {
-              setCategory(target.value)
-            }}
-          />
+            <FormControl>
+              <Input
+                sx={{ mt: 2 }}
+                placeholder="Category (Ex: Movies, TV Shows, etc)"
+                error={!!errors.category}
+                {...register('category', { required: 'Select or create a new Category' })}
+              />
 
-          {directoryTree && (
-            <Input
-              sx={{ mt: 2 }}
-              placeholder="Base Path"
-              defaultValue={directoryTree?.currentLocation}
-              onChange={({ target }) => {
-                setBasePath(target.value)
-              }}
-            />
-          )}
+              <FormHelperText>{errors.category?.message}</FormHelperText>
+            </FormControl>
 
-          {directoryTree ? (
-            <FileTree rootPath={directoryTree} onSelectPath={setSelectedPath} />
-          ) : (
-            <Skeleton />
-          )}
+            {directoryTree && (
+              <Input
+                sx={{ mt: 2 }}
+                placeholder="Base Path"
+                defaultValue={directoryTree?.currentLocation}
+                onChange={({ target }) => {
+                  setBasePath(target.value)
+                }}
+              />
+            )}
 
-          <Button
-            loading={addDirectory.isLoading}
-            sx={{ mt: 2 }}
-            disabled={!category || !selectedPath}
-            onClick={() => {
-              addDirectory.mutate({
-                category,
-                location: selectedPath
-              })
-            }}
-          >
-            {createButtonMessage}
-          </Button>
+            {directoryTree ? (
+              <ErrorableFormControl errorMessage={errors.location?.message}>
+                <FileTree
+                  rootPath={directoryTree}
+                  onSelectPath={(path) => {
+                    setValue('location', path)
+                    clearErrors('location')
+                  }}
+                />
+              </ErrorableFormControl>
+            ) : (
+              <Skeleton />
+            )}
+
+            <Button
+              loading={addDirectory.isLoading}
+              sx={{ mt: 2, mb: 2 }}
+              type="submit"
+            >
+              Add directory
+            </Button>
+          </form>
         </ModalDialog>
       </Modal>
     </>
