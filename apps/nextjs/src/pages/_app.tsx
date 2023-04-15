@@ -4,6 +4,7 @@ import '@fontsource/public-sans';
 import { api } from "~/utils/api";
 import { CssVarsProvider } from "@mui/joy";
 import { mergedTheme } from "~/theme/mui";
+import { NavBar } from "~/components/app/NavBar";
 
 const MyApp: AppType = ({
   Component,
@@ -11,6 +12,8 @@ const MyApp: AppType = ({
 }) => {
   return (
     <CssVarsProvider defaultMode="dark" theme={mergedTheme}>
+      <NavBar />
+
       <Component {...pageProps} />
     </CssVarsProvider>
   );

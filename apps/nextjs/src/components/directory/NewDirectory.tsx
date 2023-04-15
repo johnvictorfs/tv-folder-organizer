@@ -21,10 +21,8 @@ export const NewDirectory: React.FC = () => {
     onSuccess() {
       setCategory('')
       setSelectedPath('')
-      setBasePath('~')
       setModalOpen(false)
       // TODO: Add toast
-
     }
   })
 
