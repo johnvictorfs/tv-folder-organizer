@@ -12,7 +12,7 @@ datasource db {
 
 model Directory {
     id                       String   @id @default(cuid())
-    title                    String
+    category                 String
     location                 String
     updateFrequencyInMinutes Int
     updatedAt                DateTime @default(now())

@@ -124,18 +124,21 @@ const FileTreeItem: React.FC<FileTreeItemProps> = ({
 
 export type FileTreeProps = {
   rootPath: RouterOutputs['directory']['getDirectoryStructure']
+  onSelectPath: (path: string) => void
 }
 
-export const FileTree: React.FC<FileTreeProps> = ({ rootPath: directoryTree }) => {
+export const FileTree: React.FC<FileTreeProps> = ({ rootPath: directoryTree, onSelectPath }) => {
   const [expanded, setExpanded] = useState<string[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string>();
 
   const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
     setExpanded(nodeIds);
   };
 
-  const handleSelect = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    setSelected(nodeIds);
+  const handleSelect = (event: React.SyntheticEvent, nodeId: string) => {
+    setSelected(nodeId)
+
+    onSelectPath(nodeId)
   };
 
   return (
@@ -144,6 +147,7 @@ export const FileTree: React.FC<FileTreeProps> = ({ rootPath: directoryTree }) =
       defaultEndIcon={<CloseSquare />}
       expanded={expanded}
       selected={selected}
+      multiSelect={false}
       onNodeToggle={handleToggle}
       onNodeSelect={handleSelect}
       sx={{
