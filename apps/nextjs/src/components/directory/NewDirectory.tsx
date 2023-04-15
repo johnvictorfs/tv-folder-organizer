@@ -8,6 +8,7 @@ import { Button, Input, Modal, ModalDialog } from "@mui/joy"
 import { Skeleton } from '@mui/lab'
 import { FileTree } from "~/components/directory/FileTree"
 import { useDebounced } from "~/utils/input"
+import { toast } from "react-toastify"
 
 export const NewDirectory: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false)
@@ -22,7 +23,7 @@ export const NewDirectory: React.FC = () => {
       setCategory('')
       setSelectedPath('')
       setModalOpen(false)
-      // TODO: Add toast
+      toast.success("Directory added to be tracked successfully");
     }
   })
 
