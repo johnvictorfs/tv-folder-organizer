@@ -6,6 +6,7 @@ import { readdir } from 'fs/promises'
 
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 export const directoryRouter = createTRPCRouter({
   existingCategories: publicProcedure.query(async ({ ctx }) => {
@@ -15,6 +16,27 @@ export const directoryRouter = createTRPCRouter({
     })
 
     return categories.map(directory => directory.category)
+  }),
+  delete: publicProcedure.input(
+    z.object({
+      id: z.string(),
+    })
+  ).mutation(async ({ input, ctx }) => {
+    const directory = await ctx.prisma.directory.findUnique({
+      where: {
+        id: input.id,
+      },
+    })
+
+    if (!directory) {
+      throw new TRPCError({ message: 'Directory not found', code: 'NOT_FOUND' })
+    }
+
+    await ctx.prisma.directory.delete({
+      where: {
+        id: input.id,
+      }
+    })
   }),
   all: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.directory.findMany()
