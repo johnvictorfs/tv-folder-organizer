@@ -9,6 +9,7 @@ import { ToastContainer } from "~/components/toasts/ToastContainer";
 
 import '@fontsource/public-sans';
 import 'react-toastify/dist/ReactToastify.css';
+import '~/utils/dayjs'
 
 const MyApp: AppType = ({
   Component,
