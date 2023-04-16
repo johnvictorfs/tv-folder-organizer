@@ -70,7 +70,16 @@ export const NewDirectory: React.FC = () => {
         open={modalOpen}
         onClose={closeModal}
       >
-        <ModalDialog size="lg" sx={{ p: 2, minHeight: 200, minWidth: 700 }}>
+        <ModalDialog size="lg" sx={{
+          p: 2,
+          minHeight: 200,
+          width: {
+            xs: '100%',
+            sm: '100%',
+            md: '50vw',
+            lg: '50vw'
+          }
+        }}>
           <form
             onSubmit={(event) => {
               event.preventDefault();
