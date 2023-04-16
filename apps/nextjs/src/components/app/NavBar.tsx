@@ -1,5 +1,6 @@
-import * as React from 'react'
 import { Box, Grid, Sheet } from '@mui/joy'
+import * as React from 'react'
+
 import { NewDirectory } from '~/components/directory/NewDirectory'
 
 export const NavBar: React.FC = () => {
@@ -13,12 +14,15 @@ export const NavBar: React.FC = () => {
         left: 0,
         right: 0,
         zIndex: theme.zIndex.popup - 1,
-        height: navBarHeight
-      })}>
+        height: navBarHeight,
+      })}
+      >
         <Sheet color="neutral">
-          <Grid container sx={{
-            p: 1
-          }}>
+          <Grid container
+            sx={{
+              p: 1,
+            }}
+          >
             {/* Left Aligned */}
             <Grid>
               <NewDirectory />
@@ -33,7 +37,7 @@ export const NavBar: React.FC = () => {
 
       <Box
         sx={{
-          height: navBarHeight
+          height: navBarHeight,
         }}
       />
     </>

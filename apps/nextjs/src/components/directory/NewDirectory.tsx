@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react"
-
 import {
   Add,
 } from '@mui/icons-material'
+import { Button, Input, Modal, ModalDialog, FormControl, FormHelperText } from '@mui/joy'
 import { Skeleton } from '@mui/lab'
-import { Button, Input, Modal, ModalDialog, FormControl, FormHelperText } from "@mui/joy"
-import { toast } from "react-toastify"
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 
-import { type RouterInputs, api } from "~/utils/api"
-import { FileTree } from "~/components/directory/FileTree"
-import { ErrorableFormControl } from "~/components/inputs/ErrorableFormControl"
-import { useDebounced } from "~/utils/input"
+import { FileTree } from '~/components/directory/FileTree'
+import { ErrorableFormControl } from '~/components/inputs/ErrorableFormControl'
+import { type RouterInputs, api } from '~/utils/api'
+import { useDebounced } from '~/utils/input'
 
 export const NewDirectory: React.FC = () => {
   const { register, unregister, handleSubmit, setValue, reset, clearErrors, formState: { errors } } = useForm<
@@ -20,9 +19,9 @@ export const NewDirectory: React.FC = () => {
     defaultValues: {
       category: '',
       location: '',
-      updateFrequencyInMinutes: 60
-    }
-  });
+      updateFrequencyInMinutes: 60,
+    },
+  })
 
   const [modalOpen, setModalOpen] = useState(false)
   const [basePath, setBasePath] = useState('~')
@@ -38,27 +37,27 @@ export const NewDirectory: React.FC = () => {
     onSuccess() {
       reset()
       closeModal()
-      toast.success("Directory added successfully");
-    }
+      toast.success('Directory added successfully')
+    },
   })
 
   useEffect(() => {
-    register('location', { required: 'Select a directory' });
+    register('location', { required: 'Select a directory' })
 
     return () => {
-      unregister('location');
-    };
-  }, [register, unregister]);
+      unregister('location')
+    }
+  }, [register, unregister])
 
   const { data: directoryTree } = api.directory.getDirectoryStructure.useQuery(
     {
       includeHiddenDirectories: false,
-      currentPath: debouncedBasePath
+      currentPath: debouncedBasePath,
     },
     {
-      enabled: modalOpen
-    }
-  );
+      enabled: modalOpen,
+    },
+  )
 
   return (
     <>
@@ -70,23 +69,26 @@ export const NewDirectory: React.FC = () => {
         open={modalOpen}
         onClose={closeModal}
       >
-        <ModalDialog size="lg" sx={{
-          p: 2,
-          minHeight: 200,
-          width: {
-            xs: '100%',
-            sm: '100%',
-            md: '50vw',
-            lg: '50vw'
-          }
-        }}>
+        <ModalDialog size="lg"
+          sx={{
+            p: 2,
+            minHeight: 200,
+            width: {
+              xs: '100%',
+              sm: '100%',
+              md: '50vw',
+              lg: '50vw',
+            },
+          }}
+        >
           <form
             onSubmit={(event) => {
-              event.preventDefault();
+              event.preventDefault()
               void handleSubmit(data => {
                 addDirectory.mutate(data)
               })(event)
-            }}>
+            }}
+          >
             Adding new Directory to be tracked
 
             <FormControl>
@@ -97,7 +99,9 @@ export const NewDirectory: React.FC = () => {
                 {...register('category', { required: 'Select or create a new Category' })}
               />
 
-              <FormHelperText>{errors.category?.message}</FormHelperText>
+              <FormHelperText>
+                {errors.category?.message}
+              </FormHelperText>
             </FormControl>
 
             {directoryTree && (

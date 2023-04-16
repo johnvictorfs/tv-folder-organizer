@@ -1,7 +1,7 @@
-import { Grid, type GridProps } from "@mui/joy"
+import { Grid, type GridProps } from '@mui/joy'
 
-import { DirectoryCard } from "~/components/directory/DirectoryCard"
-import { api } from "~/utils/api"
+import { DirectoryCard } from '~/components/directory/DirectoryCard'
+import { api } from '~/utils/api'
 
 export const DirectoryList: React.FC = () => {
   const { data: directories } = api.directory.all.useQuery()
@@ -10,7 +10,7 @@ export const DirectoryList: React.FC = () => {
     xs: 12,
     sm: 6,
     md: 4,
-    lg: 3
+    lg: 3,
   }
 
   if (!directories) {

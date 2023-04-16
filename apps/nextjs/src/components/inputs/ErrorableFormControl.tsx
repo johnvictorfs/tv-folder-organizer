@@ -1,4 +1,4 @@
-import { FormControl, type FormControlProps, FormHelperText, Box } from "@mui/joy"
+import { FormControl, type FormControlProps, FormHelperText, Box } from '@mui/joy'
 
 export type ErrorableFormControlProps = {
   errorMessage?: string
@@ -16,7 +16,7 @@ export const ErrorableFormControl: React.FC<ErrorableFormControlProps> = ({
       sx={theme => ({
         border: errorMessage ? `2px solid ${theme.palette.danger[800]}` : undefined,
         borderRadius: 8,
-        mt: 2
+        mt: 2,
       })}
     >
       <Box sx={{ p: 1 }}>

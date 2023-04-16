@@ -1,8 +1,8 @@
+import { type Directory } from '@acme/db'
+import { Box, Button, Card, Typography } from '@mui/joy'
+import { Skeleton } from '@mui/material'
 import dayjs from 'dayjs'
-import { Box, Button, Card, Typography } from "@mui/joy"
-import { Skeleton } from "@mui/material"
 
-import { type Directory } from "@acme/db"
 import { DeleteDirectory } from '~/components/directory/DeleteDirectory'
 
 export type DirectoryCardProps = {
@@ -10,7 +10,7 @@ export type DirectoryCardProps = {
 }
 
 export const DirectoryCard: React.FC<DirectoryCardProps> = ({
-  directory
+  directory,
 }) => {
   return (
     <Card>
@@ -28,7 +28,9 @@ export const DirectoryCard: React.FC<DirectoryCardProps> = ({
         <Typography level="body3" sx={{ mt: 1 }}>
           {directory ? (
             <>
-              Updated {dayjs(directory.updatedAt).fromNow()}
+              Updated
+              {' '}
+              {dayjs(directory.updatedAt).fromNow()}
             </>
           ) : (
             <Skeleton width={100} />

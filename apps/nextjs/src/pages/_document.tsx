@@ -1,7 +1,7 @@
 
-import { Html, Head, Main, NextScript } from 'next/document'
-import { getInitColorSchemeScript } from '@mui/joy/styles'
 import { useTheme } from '@mui/joy'
+import { getInitColorSchemeScript } from '@mui/joy/styles'
+import { Html, Head, Main, NextScript } from 'next/document'
 
 /**
  * https://mui.com/joy-ui/main-features/dark-mode-optimization/
@@ -19,7 +19,7 @@ export default function Document() {
       <body
         style={{
           backgroundColor: theme.vars.palette.background.body,
-          color: theme.vars.palette.text.primary
+          color: theme.vars.palette.text.primary,
         }}
       >
         {getInitColorSchemeScript({ defaultMode: 'dark' })}
