@@ -16,6 +16,9 @@ export const directoryRouter = createTRPCRouter({
 
     return categories.map(directory => directory.category)
   }),
+  all: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.directory.findMany()
+  }),
   add: publicProcedure.input(
     z.object({
       location: z.string(),

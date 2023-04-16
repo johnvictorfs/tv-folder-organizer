@@ -1,19 +1,19 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 
-import { NewDirectory } from "~/components/directory/NewDirectory";
+import { DirectoryList } from "~/components/directory/DirectoryList";
 
 const Home: NextPage = () => {
   return (
     <>
       <Head>
         <title>TV Magic Organizer</title>
-        <meta name="description" content="Self-hosted App to organize your TV shows folder" />
+        <meta name="description" content="A TV Shows files organizer" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <NewDirectory />
+        <DirectoryList />
       </main >
     </>
   );
