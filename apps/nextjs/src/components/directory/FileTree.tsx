@@ -155,7 +155,7 @@ export const FileTree: React.FC<FileTreeProps> = ({ rootPath: directoryTree, onS
         overflowY: 'auto',
         overflowX: 'hidden',
         mt: 2,
-        maxHeight: 500
+        maxHeight: 'calc(100vh - 500px)'
       }}
     >
       <FileTreeItem

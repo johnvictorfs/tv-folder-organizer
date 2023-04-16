@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
-import { Delete } from "@mui/icons-material"
-import { Box, Button, Card, IconButton, Typography } from "@mui/joy"
+import { Box, Button, Card, Typography } from "@mui/joy"
 import { Skeleton } from "@mui/material"
 
 import { type Directory } from "@acme/db"
+import { DeleteDirectory } from '~/components/directory/DeleteDirectory'
 
 export type DirectoryCardProps = {
   directory?: Directory
@@ -22,23 +22,7 @@ export const DirectoryCard: React.FC<DirectoryCardProps> = ({
         {directory ? directory.location : <Skeleton width="55%" />}
       </Typography>
 
-      <IconButton
-        aria-label={`Delete ${directory?.location} (${directory?.category})`}
-        variant="plain"
-        color="neutral"
-        size="sm"
-        sx={{
-          position: 'absolute',
-          top: '0.5rem',
-          right: '0.5rem',
-          '&:hover': {
-            color: 'danger.500'
-          }
-        }}
-        disabled={!directory}
-      >
-        <Delete />
-      </IconButton>
+      <DeleteDirectory directory={directory} />
 
       <Box sx={{ display: 'flex', mt: 5 }}>
         <Typography level="body3" sx={{ mt: 1 }}>

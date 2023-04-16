@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>TV Magic Organizer</title>
+        <title>TV Folder Organizer</title>
         <meta name="description" content="A TV Shows files organizer" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
