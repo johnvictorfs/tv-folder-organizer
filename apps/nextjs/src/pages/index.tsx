@@ -1,7 +1,7 @@
-import type { NextPage } from "next";
-import Head from "next/head";
+import type { NextPage } from 'next'
+import Head from 'next/head'
 
-import { DirectoryList } from "~/components/directory/DirectoryList";
+import { DirectoryList } from '~/components/directory/DirectoryList'
 
 const Home: NextPage = () => {
   return (
@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         <DirectoryList />
       </main >
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

@@ -1,5 +1,5 @@
-import { CheckCircleRounded, InfoRounded, WarningRounded } from "@mui/icons-material"
-import { Box, Button, Divider, Modal, ModalDialog, Typography } from "@mui/joy"
+import { CheckCircleRounded, InfoRounded, WarningRounded } from '@mui/icons-material'
+import { Box, Button, Divider, Modal, ModalDialog, Typography } from '@mui/joy'
 
 export type ConfirmModalProps = {
   open: boolean
@@ -36,7 +36,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   variant = 'info',
   loading = false,
   title,
-  description
+  description,
 }) => {
   const icon = {
     warning: <WarningRounded />,
