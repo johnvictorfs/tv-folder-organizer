@@ -30,6 +30,7 @@
         ".expo/**"
       ]
     },
+    "test:run": {},
     "lint": {},
     "lint:fix": {},
     "clean": {

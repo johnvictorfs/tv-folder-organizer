@@ -42,7 +42,7 @@ jobs:
         run: pnpm install
 
       - name: Build, lint and type-check
-        run: pnpm turbo build lint type-check
+        run: pnpm turbo test:run build lint type-check
         env:
           SKIP_ENV_VALIDATION: true
 
