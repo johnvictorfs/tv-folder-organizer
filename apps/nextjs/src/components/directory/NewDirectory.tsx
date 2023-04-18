@@ -27,6 +27,7 @@ export const NewDirectory: React.FC = () => {
   const [basePath, setBasePath] = useState('~')
 
   const debouncedBasePath = useDebounced(basePath, 1200)
+  const utils = api.useContext()
 
   const closeModal = () => {
     setModalOpen(false)
@@ -38,6 +39,7 @@ export const NewDirectory: React.FC = () => {
       reset()
       closeModal()
       toast.success('Directory added successfully')
+      void utils.directory.all.invalidate()
     },
   })
 

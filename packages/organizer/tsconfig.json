@@ -3,7 +3,8 @@
   "include": [
     "src",
     "src/organizer.ts",
-    "tests"
+    "tests",
+    "index.ts"
   ],
   "compilerOptions": {
     "baseUrl": ".",

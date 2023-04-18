@@ -146,17 +146,108 @@ test('Organizer with standalone shows', () => {
   )
 })
 
-// test('organizer with season names', () => {
-//   const sampleFileList = [
-//     'Kimetsu no Yaiba - S101.mkv',
-//     'Kimetsu no Yaiba - 02.mkv',
-//     'Kimetsu no Yaiba - S203.mkv',
-//     'Kimetsu no Yaiba - 1x4.mkv',
-//     'My Hero Academia S01E01.mkv',
-//     'My Hero Academia S01E02.mkv',
-//     'My Hero Academia Season 1 Episode 3.mkv',
-//     'Overlord II - 01.mkv',
-//     'Overlord II - 02.mkv',
-//     'Overlord IV - 03.mkv',
-//   ]
-// })
+test('organizer with season names', () => {
+  const sampleFileList = [
+    'Kimetsu no Yaiba - 1x4.mkv',
+    'My Hero Academia S01E01.mkv',
+    'My Hero Academia S01E02.mkv',
+    'Overlord II - 01.mkv',
+    'Overlord II - 02.mkv',
+    'Overlord IV - 03.mkv',
+  ]
+
+  expect(
+    setupFolderOrganization(sampleFileList),
+  ).toMatchObject(
+    {
+      name: '',
+      isDirectory: true,
+      children: [
+        {
+          name: 'Kimetsu no Yaiba',
+          isDirectory: true,
+          children: [
+            {
+              name: 'Season 1',
+              isDirectory: true,
+              children: [
+                {
+                  name: 'Kimetsu no Yaiba - S01E04.mkv',
+                  originalPath: 'Kimetsu no Yaiba - 1x4.mkv',
+                  isDirectory: false,
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'My Hero Academia',
+          isDirectory: true,
+          children: [
+            {
+              name: 'Season 1',
+              isDirectory: true,
+              children: [
+                {
+                  name: 'My Hero Academia - S01E01.mkv',
+                  originalPath: 'My Hero Academia S01E01.mkv',
+                  isDirectory: false,
+                  children: [],
+                },
+                {
+                  name: 'My Hero Academia - S01E02.mkv',
+                  originalPath: 'My Hero Academia S01E02.mkv',
+                  isDirectory: false,
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Overlord II',
+          isDirectory: true,
+          children: [
+            {
+              name: 'Season 1',
+              isDirectory: true,
+              children: [
+                {
+                  name: 'Overlord II - S01E01.mkv',
+                  originalPath: 'Overlord II - 01.mkv',
+                  isDirectory: false,
+                  children: [],
+                },
+                {
+                  name: 'Overlord II - S01E02.mkv',
+                  originalPath: 'Overlord II - 02.mkv',
+                  isDirectory: false,
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Overlord IV',
+          isDirectory: true,
+          children: [
+            {
+              name: 'Season 1',
+              isDirectory: true,
+              children: [
+                {
+                  name: 'Overlord IV - S01E03.mkv',
+                  originalPath: 'Overlord IV - 03.mkv',
+                  isDirectory: false,
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  )
+})

@@ -1,3 +1,4 @@
+import { setupFolderOrganization } from '@acme/organizer'
 import { TRPCError } from '@trpc/server'
 import { readdir } from 'fs/promises'
 import os from 'os'
@@ -6,6 +7,27 @@ import { z } from 'zod'
 import { createTRPCRouter, publicProcedure } from '../trpc'
 
 export const directoryRouter = createTRPCRouter({
+  previewOrganization: publicProcedure.input(
+    z.object({
+      directoryId: z.string(),
+    }),
+  ).query(async ({ ctx, input }) => {
+    const directory = await ctx.prisma.directory.findUnique({
+      where: {
+        id: input.directoryId,
+      },
+    })
+
+    if (!directory) {
+      throw new TRPCError({ message: 'Directory not found', code: 'NOT_FOUND' })
+    }
+
+    const files = (
+      await readdir(directory.location, { withFileTypes: true })
+    ).filter((dirent) => dirent.isFile())
+
+    return setupFolderOrganization(files.map((file) => file.name))
+  }),
   existingCategories: publicProcedure.query(async ({ ctx }) => {
 
     const categories = await ctx.prisma.directory.groupBy({
