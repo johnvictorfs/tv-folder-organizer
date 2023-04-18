@@ -1,5 +1,7 @@
 import { type ParsedShow, filenameParse } from '@ctrl/video-filename-parser'
 import { readdir } from 'fs/promises'
+import fs from 'fs/promises'
+import path from 'path'
 
 export type DirectoryStructure = {
   name: string
@@ -16,11 +18,7 @@ const addChild = (parent: DirectoryStructure, child: DirectoryStructure) => {
   parent.children.push(child)
 }
 
-type ExtendedParsedShow = {
-  title: ParsedShow['title']
-  episodeNumbers: ParsedShow['episodeNumbers']
-  seasons: ParsedShow['seasons']
-}
+type ExtendedParsedShow = Pick<ParsedShow, 'title' | 'episodeNumbers' | 'seasons'>
 
 const extendedFileNameParser = (filePath: string): ExtendedParsedShow | null => {
   const regex = /^(.+?)(?:-*)(?: Season (\d+))? (?:Ep|Part) (\d+)/i
@@ -115,10 +113,47 @@ export const setupFolderOrganization = (fileList: string[]): DirectoryStructure 
   return root
 }
 
-export const organizeDirectory = async (directoryPath: string) => {
+export const organizeDirectory = async (directoryPath: string): Promise<{
+  /**
+   * List of operations performed with files, a list of human-readable messages
+   */
+  operations: string[]
+}> => {
   // Get list of files (non-folder) inside directory
   const subFiles = (await readdir(directoryPath, { withFileTypes: true }))
     .filter(dirent => dirent.isFile())
 
-  console.log(subFiles)
+  const organization = setupFolderOrganization(subFiles.map(file => file.name))
+
+  const operations: string[] = []
+
+  for (const show of organization.children) {
+    const showFolderPath = path.join(directoryPath, show.name)
+
+    operations.push(`Created folder '${showFolderPath}'`)
+    await fs.mkdir(showFolderPath, { recursive: true })
+
+    for (const season of show.children) {
+      const seasonFolderPath = path.join(showFolderPath, season.name)
+
+      operations.push(`Created folder '${seasonFolderPath}'`)
+      await fs.mkdir(seasonFolderPath, { recursive: true })
+
+      for (const episode of season.children) {
+        if (!episode.originalPath) {
+          throw new Error('Episode file has no original path')
+        }
+
+        const oldFilePath = path.join(directoryPath, episode.originalPath)
+        const newFilePath = path.join(seasonFolderPath, episode.name)
+
+        operations.push(`Moved '${oldFilePath}' to '${newFilePath}'`)
+        await fs.rename(oldFilePath, newFilePath)
+      }
+    }
+  }
+
+  return {
+    operations,
+  }
 }

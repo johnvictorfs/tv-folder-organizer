@@ -1,4 +1,5 @@
-import { Modal, ModalDialog } from '@mui/joy'
+import { Button, Modal, ModalDialog } from '@mui/joy'
+import { useState } from 'react'
 
 import { api } from '~/utils/api'
 
@@ -16,6 +17,12 @@ export const OrganizerDirectory: React.FC<OrganizerDirectoryProps> = ({
   const { data: preview } = api.directory.previewOrganization.useQuery({ directoryId }, {
     enabled: open,
   })
+  const [operations, setOperations] = useState<string[]>([])
+  const organizeDirectory = api.directory.organize.useMutation({
+    onSuccess(data) {
+      setOperations(data.operations)
+    },
+  })
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -25,6 +32,16 @@ export const OrganizerDirectory: React.FC<OrganizerDirectoryProps> = ({
             JSON.stringify(preview, null, 2)
           )}
         </pre>
+
+        <ul>
+          {operations.map((operation) => (
+            <li key={operation}>
+              {operation}
+            </li>
+          ))}
+        </ul>
+
+        <Button onClick={() => organizeDirectory.mutate({ directoryId })}>Organize</Button>
       </ModalDialog>
     </Modal>
   )

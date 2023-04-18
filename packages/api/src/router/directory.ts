@@ -1,4 +1,5 @@
-import { setupFolderOrganization } from '@acme/organizer'
+import { type PrismaClient } from '@acme/db'
+import { organizeDirectory, setupFolderOrganization } from '@acme/organizer'
 import { TRPCError } from '@trpc/server'
 import { readdir } from 'fs/promises'
 import os from 'os'
@@ -6,21 +7,40 @@ import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '../trpc'
 
+const getDirectory = async (id: string, prisma: PrismaClient) => {
+  const directory = await prisma.directory.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  if (!directory) {
+    throw new TRPCError({ message: 'Directory not found', code: 'NOT_FOUND' })
+  }
+
+  return directory
+}
+
 export const directoryRouter = createTRPCRouter({
+  organize: publicProcedure.input(
+    z.object({
+      directoryId: z.string(),
+    }),
+  ).mutation(async ({ ctx, input }) => {
+    const directory = await getDirectory(input.directoryId, ctx.prisma)
+
+    const { operations } = await organizeDirectory(directory.location)
+
+    return {
+      operations,
+    }
+  }),
   previewOrganization: publicProcedure.input(
     z.object({
       directoryId: z.string(),
     }),
   ).query(async ({ ctx, input }) => {
-    const directory = await ctx.prisma.directory.findUnique({
-      where: {
-        id: input.directoryId,
-      },
-    })
-
-    if (!directory) {
-      throw new TRPCError({ message: 'Directory not found', code: 'NOT_FOUND' })
-    }
+    const directory = await getDirectory(input.directoryId, ctx.prisma)
 
     const files = (
       await readdir(directory.location, { withFileTypes: true })
