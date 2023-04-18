@@ -251,3 +251,64 @@ test('organizer with season names', () => {
     },
   )
 })
+
+test('organizer with abbreviated names', () => {
+  const sampleFileList = [
+    'Anime Name - Ep 2.mp4',
+    'Anime Name - Ep 3.mp4',
+    'Other Anime - Ep 4.mp4',
+  ]
+
+  expect(
+    setupFolderOrganization(sampleFileList),
+  ).toMatchObject(
+    {
+      name: '',
+      isDirectory: true,
+      children: [
+        {
+          name: 'Anime Name',
+          isDirectory: true,
+          children: [
+            {
+              name: 'Season 1',
+              isDirectory: true,
+              children: [
+                {
+                  name: 'Anime Name - S01E02.mp4',
+                  originalPath: 'Anime Name - Ep 2.mp4',
+                  isDirectory: false,
+                  children: [],
+                },
+                {
+                  name: 'Anime Name - S01E03.mp4',
+                  originalPath: 'Anime Name - Ep 3.mp4',
+                  isDirectory: false,
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'Other Anime',
+          isDirectory: true,
+          children: [
+            {
+              name: 'Season 1',
+              isDirectory: true,
+              children: [
+                {
+                  name: 'Other Anime - S01E04.mp4',
+                  originalPath: 'Other Anime - Ep 4.mp4',
+                  isDirectory: false,
+                  children: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  )
+})

@@ -16,6 +16,37 @@ const addChild = (parent: DirectoryStructure, child: DirectoryStructure) => {
   parent.children.push(child)
 }
 
+type ExtendedParsedShow = {
+  title: ParsedShow['title']
+  episodeNumbers: ParsedShow['episodeNumbers']
+  seasons: ParsedShow['seasons']
+}
+
+const extendedFileNameParser = (filePath: string): ExtendedParsedShow | null => {
+  const regex = /^(.+?)(?:-*)(?: Season (\d+))? (?:Ep|Part) (\d+)/i
+  const match = filePath.match(regex)
+
+  if (match) {
+    const title = (match[1] || filePath).trim()
+    const season = match[2] ? parseInt(match[2], 10) : undefined
+    const episodeNumber = match[3] ? parseInt(match[3], 10) : undefined
+
+    const result: ExtendedParsedShow = {
+      title,
+      episodeNumbers: episodeNumber ? [episodeNumber] : [],
+      seasons: [],
+    }
+
+    if (season) {
+      result.seasons = [season]
+    }
+
+    return result
+  }
+
+  return null
+}
+
 export const setupFolderOrganization = (fileList: string[]): DirectoryStructure => {
   const root: DirectoryStructure = {
     name: '',
@@ -25,8 +56,16 @@ export const setupFolderOrganization = (fileList: string[]): DirectoryStructure 
 
   fileList.forEach((filePath) => {
     const { title: parsedTitle, seasons, episodeNumbers } = filenameParse(filePath, true) as ParsedShow
+    const customParsed = !!episodeNumbers ? null : extendedFileNameParser(filePath)
 
-    if (!seasons && !episodeNumbers) {
+    const fileExtension = filePath.split('.').pop()
+
+    const title = parsedTitle || customParsed?.title || filePath
+    const season = seasons?.[0] || customParsed?.seasons?.[0] || 1
+    const episode = episodeNumbers?.[0] || customParsed?.episodeNumbers?.[0] || 1
+
+    if (!seasons && !episodeNumbers && !customParsed) {
+      // If no parsers worked, consider it a standalone media file, like a movie or special
       const standaloneTitle = filePath.split('.')[0] || filePath
 
       addChild(root, {
@@ -38,10 +77,6 @@ export const setupFolderOrganization = (fileList: string[]): DirectoryStructure 
 
       return
     }
-
-    const title = parsedTitle || filePath
-    const season = seasons?.[0] || 1
-    const episode = episodeNumbers?.[0] || 1
 
     let showNode = findChildByName(root.children, title)
     if (!showNode) {
@@ -65,7 +100,7 @@ export const setupFolderOrganization = (fileList: string[]): DirectoryStructure 
     }
 
     const formattedEpisodeNumber = episode.toString().padStart(2, '0')
-    const episodeName = `${title} - S${season.toString().padStart(2, '0')}E${formattedEpisodeNumber}.mkv`
+    const episodeName = `${title} - S${season.toString().padStart(2, '0')}E${formattedEpisodeNumber}.${fileExtension}`
 
     const episodeNode: DirectoryStructure = {
       name: episodeName,
