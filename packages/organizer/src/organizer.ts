@@ -113,31 +113,72 @@ export const setupFolderOrganization = (fileList: string[]): DirectoryStructure 
   return root
 }
 
-export const organizeDirectory = async (directoryPath: string): Promise<{
+type FileOperation = {
+  type: 'move' | 'create'
+  isDirectory: boolean
+  from?: string
+  to: string
+}
+
+/**
+ * Returns false if the directory already exists, true if it was created
+ */
+const createDirectoryIfNotExist = async (dirPath: string, preview = false): Promise<boolean> => {
+  try {
+    await fs.access(dirPath)
+    // If access is successful, the directory already exists.
+    return false
+  } catch (error) {
+    // If an error is thrown, the directory likely does not exist. Create it.
+    if (!preview) {
+      await fs.mkdir(dirPath, { recursive: true })
+    }
+
+    return true
+  }
+}
+
+export const organizeDirectory = async (directoryPath: string, options?: {
+  /**
+   * If true, no file operations will be made, but will return a list of operations
+   * that would be done if preview was false
+   *
+   * @default false
+   */
+  preview?: boolean
+}): Promise<{
   /**
    * List of operations performed with files, a list of human-readable messages
    */
-  operations: string[]
+  operations: FileOperation[]
+  fileStructure: DirectoryStructure
 }> => {
+  // Default options
+  const { preview = false } = options || {}
+
   // Get list of files (non-folder) inside directory
   const subFiles = (await readdir(directoryPath, { withFileTypes: true }))
     .filter(dirent => dirent.isFile())
 
   const organization = setupFolderOrganization(subFiles.map(file => file.name))
 
-  const operations: string[] = []
+  const operations: FileOperation[] = []
 
   for (const show of organization.children) {
     const showFolderPath = path.join(directoryPath, show.name)
 
-    operations.push(`Created folder '${showFolderPath}'`)
-    await fs.mkdir(showFolderPath, { recursive: true })
+    const createdShowFolder = await createDirectoryIfNotExist(showFolderPath, preview)
+    if (createdShowFolder) {
+      operations.push({ type: 'create', isDirectory: true, to: showFolderPath })
+    }
 
     for (const season of show.children) {
       const seasonFolderPath = path.join(showFolderPath, season.name)
 
-      operations.push(`Created folder '${seasonFolderPath}'`)
-      await fs.mkdir(seasonFolderPath, { recursive: true })
+      const createdSeasonFolder = await createDirectoryIfNotExist(seasonFolderPath, preview)
+      if (createdSeasonFolder) {
+        operations.push({ type: 'create', isDirectory: true, to: seasonFolderPath })
+      }
 
       for (const episode of season.children) {
         if (!episode.originalPath) {
@@ -147,13 +188,16 @@ export const organizeDirectory = async (directoryPath: string): Promise<{
         const oldFilePath = path.join(directoryPath, episode.originalPath)
         const newFilePath = path.join(seasonFolderPath, episode.name)
 
-        operations.push(`Moved '${oldFilePath}' to '${newFilePath}'`)
-        await fs.rename(oldFilePath, newFilePath)
+        operations.push({ type: 'move', isDirectory: false, from: oldFilePath, to: newFilePath })
+        if (!preview) {
+          await fs.rename(oldFilePath, newFilePath)
+        }
       }
     }
   }
 
   return {
     operations,
+    fileStructure: organization,
   }
 }

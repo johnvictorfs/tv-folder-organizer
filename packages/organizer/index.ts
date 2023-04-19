@@ -1,1 +1,1 @@
-export { setupFolderOrganization, organizeDirectory } from './src/organizer'
+export { organizeDirectory } from './src/organizer'
