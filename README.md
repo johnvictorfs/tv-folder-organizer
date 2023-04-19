@@ -23,10 +23,16 @@ WIP
   pnpm install
   ```
 
+- Setup Environment Vars
+
+  ```bash
+  cp .env.example .env
+  ```
+
 - Setup Database
 
   ```bash
-  pnpm prisma db:push
+  pnpm db:push
   ```
 
 - Run Dev Server
