@@ -1,21 +1,21 @@
+import { newDirectorySchema } from '@local/validators'
 import {
   Add,
 } from '@mui/icons-material'
 import { Button, Input, Modal, ModalDialog, FormControl, FormHelperText } from '@mui/joy'
 import { Skeleton } from '@mui/lab'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 import { FileTree } from '~/components/directory/FileTree'
 import { ErrorableFormControl } from '~/components/inputs/ErrorableFormControl'
-import { type RouterInputs, api } from '~/utils/api'
+import { api } from '~/utils/api'
+import { useZodForm } from '~/utils/forms'
 import { useDebounced } from '~/utils/input'
 
 export const NewDirectory: React.FC = () => {
-  const { register, unregister, handleSubmit, setValue, reset, clearErrors, formState: { errors } } = useForm<
-    RouterInputs['directory']['add']
-  >({
+  const { register, unregister, handleSubmit, setValue, reset, clearErrors, formState: { errors } } = useZodForm({
+    schema: newDirectorySchema,
     defaultValues: {
       category: '',
       location: '',
@@ -44,7 +44,7 @@ export const NewDirectory: React.FC = () => {
   })
 
   useEffect(() => {
-    register('location', { required: 'Select a directory' })
+    register('location')
 
     return () => {
       unregister('location')
@@ -98,7 +98,7 @@ export const NewDirectory: React.FC = () => {
                 sx={{ mt: 2 }}
                 placeholder="Category (Ex: Movies, TV Shows, etc)"
                 error={!!errors.category}
-                {...register('category', { required: 'Select or create a new Category' })}
+                {...register('category')}
               />
 
               <FormHelperText>

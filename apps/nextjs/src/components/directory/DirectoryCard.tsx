@@ -1,4 +1,4 @@
-import { type Directory } from '@acme/db'
+import { type Directory } from '@local/db'
 import { Box, Button, Card, Typography } from '@mui/joy'
 import { Skeleton } from '@mui/material'
 import dayjs from 'dayjs'

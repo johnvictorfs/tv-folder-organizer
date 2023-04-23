@@ -1,4 +1,4 @@
-import type { RouterOutputs } from '@acme/api'
+import type { RouterOutputs } from '@local/api'
 import { Folder, FolderOpen } from '@mui/icons-material'
 import { SvgIcon, type SvgIconProps, styled, CircularProgress } from '@mui/joy'
 import { TreeItem, type TreeItemProps, TreeView, treeItemClasses, type TreeItemContentProps } from '@mui/lab'
