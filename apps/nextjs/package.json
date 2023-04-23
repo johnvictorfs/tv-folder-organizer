@@ -13,13 +13,13 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@local/api": "^0.1.0",
-    "@local/db": "^0.1.0",
-    "@local/validators": "^0.1.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/public-sans": "^4.5.12",
     "@hookform/resolvers": "^3.1.0",
+    "@local/api": "^0.1.0",
+    "@local/db": "^0.1.0",
+    "@local/validators": "^0.1.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/joy": "5.0.0-alpha.75",
     "@mui/lab": "5.0.0-alpha.126",

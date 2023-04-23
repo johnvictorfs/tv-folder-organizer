@@ -18,8 +18,8 @@
     "type-check": "turbo type-check"
   },
   "dependencies": {
-    "@local/eslint-config": "^0.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
+    "@local/eslint-config": "^0.1.0",
     "@manypkg/cli": "^0.20.0",
     "@types/prettier": "^2.7.2",
     "eslint": "^8.38.0",
