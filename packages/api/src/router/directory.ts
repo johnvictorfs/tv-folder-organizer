@@ -1,3 +1,5 @@
+import { type PrismaClient } from '@acme/db'
+import { organizeDirectory } from '@acme/organizer'
 import { TRPCError } from '@trpc/server'
 import { readdir } from 'fs/promises'
 import os from 'os'
@@ -5,7 +7,50 @@ import { z } from 'zod'
 
 import { createTRPCRouter, publicProcedure } from '../trpc'
 
+const getDirectory = async (id: string, prisma: PrismaClient) => {
+  const directory = await prisma.directory.findUnique({
+    where: {
+      id,
+    },
+  })
+
+  if (!directory) {
+    throw new TRPCError({ message: 'Directory not found', code: 'NOT_FOUND' })
+  }
+
+  return directory
+}
+
 export const directoryRouter = createTRPCRouter({
+  organize: publicProcedure.input(
+    z.object({
+      directoryId: z.string(),
+    }),
+  ).mutation(async ({ ctx, input }) => {
+    const directory = await getDirectory(input.directoryId, ctx.prisma)
+
+    const { operations } = await organizeDirectory(directory.location)
+
+    return {
+      operations,
+    }
+  }),
+  previewOrganization: publicProcedure.input(
+    z.object({
+      directoryId: z.string(),
+    }),
+  ).query(async ({ ctx, input }) => {
+    const directory = await getDirectory(input.directoryId, ctx.prisma)
+
+    const { operations, fileStructure } = await organizeDirectory(directory.location, {
+      preview: true,
+    })
+
+    return {
+      operations,
+      fileStructure,
+    }
+  }),
   existingCategories: publicProcedure.query(async ({ ctx }) => {
 
     const categories = await ctx.prisma.directory.groupBy({
@@ -13,6 +58,13 @@ export const directoryRouter = createTRPCRouter({
     })
 
     return categories.map(directory => directory.category)
+  }),
+  get: publicProcedure.input(
+    z.object({
+      id: z.string(),
+    }),
+  ).query(async ({ ctx, input }) => {
+    return await getDirectory(input.id, ctx.prisma)
   }),
   delete: publicProcedure.input(
     z.object({

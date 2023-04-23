@@ -13,5 +13,6 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "vitest.commandLine": "pnpm turbo test --"
 }

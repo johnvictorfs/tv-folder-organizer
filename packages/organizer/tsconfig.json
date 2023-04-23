@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "src",
+    "src/organizer.ts",
+    "tests",
+    "index.ts"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+  },
+}
