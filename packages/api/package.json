@@ -12,6 +12,7 @@
   "dependencies": {
     "@acme/db": "^0.1.0",
     "@acme/organizer": "^0.1.0",
+    "@acme/validators": "^0.1.0",
     "@trpc/client": "^10.19.1",
     "@trpc/server": "^10.19.1",
     "superjson": "1.9.1",

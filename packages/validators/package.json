@@ -1,0 +1,18 @@
+{
+  "name": "@acme/validators",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "devDependencies": {
+    "@acme/eslint-config": "^0.1.0",
+    "eslint": "^8.38.0",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.21.4"
+  }
+}

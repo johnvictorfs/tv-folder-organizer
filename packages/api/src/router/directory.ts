@@ -1,5 +1,6 @@
 import { type PrismaClient } from '@acme/db'
 import { organizeDirectory } from '@acme/organizer'
+import { newDirectorySchema } from '@acme/validators'
 import { TRPCError } from '@trpc/server'
 import { readdir } from 'fs/promises'
 import os from 'os'
@@ -91,11 +92,7 @@ export const directoryRouter = createTRPCRouter({
     return ctx.prisma.directory.findMany()
   }),
   add: publicProcedure.input(
-    z.object({
-      location: z.string(),
-      category: z.string(),
-      updateFrequencyInMinutes: z.number().optional().default(60),
-    }),
+    newDirectorySchema,
   ).mutation(({ input, ctx }) => {
     return ctx.prisma.directory.create({
       data: {
