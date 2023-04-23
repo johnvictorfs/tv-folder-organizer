@@ -1,4 +1,4 @@
-import { newDirectorySchema } from '@acme/validators'
+import { newDirectorySchema } from '@local/validators'
 import {
   Add,
 } from '@mui/icons-material'

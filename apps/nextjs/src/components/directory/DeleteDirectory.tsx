@@ -1,4 +1,4 @@
-import { type Directory } from '@acme/db'
+import { type Directory } from '@local/db'
 import { Delete } from '@mui/icons-material'
 import { IconButton } from '@mui/joy'
 import { useState } from 'react'

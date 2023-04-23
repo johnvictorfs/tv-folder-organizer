@@ -38,7 +38,7 @@ const config = {
       {
         pathGroups: [
           {
-            pattern: '@acme/**',
+            pattern: '@local/**',
             group: 'internal',
             position: 'before',
           },
