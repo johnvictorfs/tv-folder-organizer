@@ -8,10 +8,6 @@
     "eslint": "^8.38.0",
     "typescript": "^5.0.4"
   },
-  "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run"
-  },
   "dependencies": {
     "zod": "^3.21.4"
   }
