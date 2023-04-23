@@ -7,7 +7,7 @@ import {
   type ColorSystem,
   extendTheme as extendJoyTheme,
 } from '@mui/joy/styles'
-import { experimental_extendTheme as extendMuiTheme } from '@mui/material'
+import { experimental_extendTheme as extendMuiTheme } from '@mui/material/styles'
 import { deepmerge } from '@mui/utils'
 
 const { unstable_sxConfig: muiSxConfig, ...muiTheme } = extendMuiTheme({

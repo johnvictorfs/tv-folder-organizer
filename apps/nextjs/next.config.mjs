@@ -8,10 +8,18 @@
 const config = {
   reactStrictMode: true,
   /** Enables hot reloading for local packages without a build step */
-  transpilePackages: ['@acme/api', '@acme/db'],
+  transpilePackages: ['@local/api', '@local/db'],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   typescript: { ignoreBuildErrors: !!process.env.CI },
+  modularizeImports: {
+    '@mui/material': {
+      transform: '@mui/material/{{member}}',
+    },
+    '@mui/icons-material': {
+      transform: '@mui/icons-material/{{member}}',
+    },
+  },
 }
 
 export default config
