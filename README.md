@@ -8,6 +8,8 @@ This project was created using the [create-t3-turbo](https://github.com/t3-oss/c
 
 WIP
 
+![image](https://user-images.githubusercontent.com/37747572/235327355-06daad22-5bbf-4f4d-8cc9-4bc0f4f508e3.png)
+
 ---
 
 ## Development Setup
